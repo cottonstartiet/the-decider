@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 import '../theme/zen_theme.dart';
 import 'coin_flip_screen.dart';
+import 'random_number_screen.dart';
+import 'color_picker_screen.dart';
+import 'pass_take_screen.dart';
+import 'dice_roller_screen.dart';
+
+import 'spin_bottle_screen.dart';
+import 'yes_no_oracle_screen.dart';
+
+
+
+import 'double_nothing_screen.dart';
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -18,11 +30,73 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       _ToolItem(
-        title: 'Coming Soon',
-        subtitle: 'More tools ahead',
-        icon: Icons.more_horiz,
-        onTap: null,
+        title: 'Random Number',
+        subtitle: 'Pick 1–10',
+        icon: Icons.tag,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const RandomNumberScreen()),
+        ),
       ),
+      _ToolItem(
+        title: 'Color Picker',
+        subtitle: 'Spin the wheel',
+        icon: Icons.palette_outlined,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const ColorPickerScreen()),
+        ),
+      ),
+      _ToolItem(
+        title: 'Pass or Take',
+        subtitle: 'Should you?',
+        icon: Icons.swap_horiz,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const PassTakeScreen()),
+        ),
+      ),
+      _ToolItem(
+        title: 'Dice Roller',
+        subtitle: 'Roll the dice',
+        icon: Icons.casino,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const DiceRollerScreen()),
+        ),
+      ),
+
+      _ToolItem(
+        title: 'Spin the Bottle',
+        subtitle: 'Where it points',
+        icon: Icons.rotate_right,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const SpinBottleScreen()),
+        ),
+      ),
+      _ToolItem(
+        title: 'Yes or No',
+        subtitle: 'Consult the orb',
+        icon: Icons.help_outline,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const YesNoOracleScreen()),
+        ),
+      ),
+
+
+
+      _ToolItem(
+        title: 'Double or Nothing',
+        subtitle: 'Risk it all',
+        icon: Icons.trending_up,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const DoubleNothingScreen()),
+        ),
+      ),
+
     ];
 
     return Scaffold(

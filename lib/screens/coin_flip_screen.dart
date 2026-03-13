@@ -66,53 +66,58 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('HEADS OR TAILS')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Result text
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 400),
-              opacity: (_result != null && !_isFlipping) ? 1.0 : 0.0,
-              child: Text(
-                _result ?? '',
-                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  letterSpacing: 4,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final mainSize = min(constraints.maxWidth * 0.75, constraints.maxHeight * 0.45);
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Result text
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 400),
+                  opacity: (_result != null && !_isFlipping) ? 1.0 : 0.0,
+                  child: Text(
+                    _result ?? '',
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      letterSpacing: 4,
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(height: mainSize * 0.15),
+                // Coin
+                GestureDetector(
+                  onTap: _flipCoin,
+                  child: AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      final angle = _animation.value;
+                      // Determine which face to show based on rotation angle
+                      final showBack = (angle / pi).floor() % 2 == 1;
+                      return Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.identity()
+                          ..setEntry(3, 2, 0.001) // perspective
+                          ..rotateX(angle),
+                        child: _CoinFace(showBack: showBack, size: mainSize),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: mainSize * 0.15),
+                // Instruction
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 300),
+                  opacity: _isFlipping ? 0.0 : 1.0,
+                  child: Text(
+                    'Tap the coin',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 48),
-            // Coin
-            GestureDetector(
-              onTap: _flipCoin,
-              child: AnimatedBuilder(
-                animation: _animation,
-                builder: (context, child) {
-                  final angle = _animation.value;
-                  // Determine which face to show based on rotation angle
-                  final showBack = (angle / pi).floor() % 2 == 1;
-                  return Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()
-                      ..setEntry(3, 2, 0.001) // perspective
-                      ..rotateX(angle),
-                    child: _CoinFace(showBack: showBack),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 48),
-            // Instruction
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 300),
-              opacity: _isFlipping ? 0.0 : 1.0,
-              child: Text(
-                'Tap the coin',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -120,13 +125,14 @@ class _CoinFlipScreenState extends State<CoinFlipScreen>
 
 class _CoinFace extends StatelessWidget {
   final bool showBack;
-  const _CoinFace({required this.showBack});
+  final double size;
+  const _CoinFace({required this.showBack, required this.size});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 160,
-      height: 160,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: LinearGradient(
@@ -150,8 +156,8 @@ class _CoinFace extends StatelessWidget {
           transform: showBack ? (Matrix4.identity()..rotateX(pi)) : Matrix4.identity(),
           child: Text(
             showBack ? 'T' : 'H',
-            style: const TextStyle(
-              fontSize: 48,
+            style: TextStyle(
+              fontSize: size * 48 / 160,
               fontWeight: FontWeight.w200,
               color: ZenTheme.softWhite,
               letterSpacing: 2,
